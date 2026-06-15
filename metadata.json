@@ -1,0 +1,6 @@
+{
+  "name": "Plano 52 Semanas Para Ministério Infantil",
+  "description": "52 cultos infantis prontos para usar durante o ano inteiro.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

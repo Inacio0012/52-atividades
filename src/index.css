@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  
+  --color-brand-green: #10b981;
+  --color-brand-green-hover: #059669;
+  --color-[#F8FAF7]: #F8FAF7;
+}
+
+:root {
+  --soft-mint: #ECFDF5;
+  --brand-green: #10B981;
+  --brand-green-dark: #047857;
+  --badge-orange: #F59E0B;
+  --whatsapp: #25D366;
+  --foreground: #111827;
+}
+
+/* Custom smooth styling tweaks */
+body {
+  background-color: #F8FAF7;
+  font-family: "Poppins", sans-serif;
+  color: var(--foreground);
+}
+
+.text-gradient {
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Breath animation for CTAs */
+@keyframes ctaBreathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.025); }
+}
+
+.animate-cta-breathe {
+  animation: ctaBreathe 2s infinite ease-in-out;
+}
+
+/* Marquee slide animation */
+@keyframes marqueeLeft {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee-left {
+  animation: marqueeLeft 18s linear infinite;
+}
+
+.animate-marquee-left:hover {
+  animation-play-state: paused;
+}
