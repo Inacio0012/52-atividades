@@ -309,10 +309,10 @@ export default function App() {
           {/* Classroom photos real grid with modern polaroid aesthetic */}
           <div className="mx-auto mt-5 max-w-[352px] grid grid-cols-2 gap-3">
             {[
-              { src: "https://52cultosinfantis.netlify.app/assets/sala-aula-01.png", label: "Crianças Concentradas" },
-              { src: "https://52cultosinfantis.netlify.app/assets/sala-aula-02.png", label: "Atividades Práticas" },
-              { src: "https://52cultosinfantis.netlify.app/assets/sala-aula-03.png", label: "Aprendizado Lúdico" },
-              { src: "https://52cultosinfantis.netlify.app/assets/sala-aula-04.png", label: "Salinha Cheia e Atenta" }
+              { src: "https://cultinhoclonanaoooo.netlify.app/assets/sala-aula-01.png", label: "Crianças Concentradas" },
+              { src: "https://cultinhoclonanaoooo.netlify.app/assets/sala-aula-02.png", label: "Atividades Práticas" },
+              { src: "https://cultinhoclonanaoooo.netlify.app/assets/sala-aula-03.png", label: "Aprendizado Lúdico" },
+              { src: "https://cultinhoclonanaoooo.netlify.app/assets/sala-aula-04.png", label: "Salinha Cheia e Atenta" }
             ].map((photo, index) => (
               <div key={index} className="rounded-2xl overflow-hidden border border-neutral-200/80 bg-white p-2 flex flex-col justify-between shadow-sm hover:shadow transition-shadow">
                 <img 
@@ -431,22 +431,22 @@ export default function App() {
           <div className="mx-auto mt-5 max-w-[352px] grid grid-cols-2 gap-3.5">
             {[
               {
-                src: "https://52cultosinfantis.netlify.app/assets/produto-cultinho-06.png",
+                src: "https://cultinhoclonanaoooo.netlify.app/assets/produto-cultinho-06.png",
                 title: "1 Ano de Atividades",
                 desc: "Roteiros bíblicos com atividades de fixação para o ano todo."
               },
               {
-                src: "https://52cultosinfantis.netlify.app/assets/atividades-apoio-visual.webp",
+                src: "https://cultinhoclonanaoooo.netlify.app/assets/atividades-apoio-visual.webp",
                 title: "Atividades & Apoio",
                 desc: "Lindo apoio visual com desenhos de colorir para a sala de aula."
               },
               {
-                src: "https://52cultosinfantis.netlify.app/assets/roteiros-prontos-semana.webp",
+                src: "https://cultinhoclonanaoooo.netlify.app/assets/roteiros-prontos-semana.webp",
                 title: "Roteiros Prontos",
                 desc: "Planos semanais prontinhos focados no aprendizado prático."
               },
               {
-                src: "https://52cultosinfantis.netlify.app/assets/acesso-digital-imediato.webp",
+                src: "https://cultinhoclonanaoooo.netlify.app/assets/acesso-digital-imediato.webp",
                 title: "Acesso Digital Imediato",
                 desc: "Baixe direto pelo seu celular em formato PDF organizado."
               }
@@ -530,7 +530,7 @@ export default function App() {
                 {/* Imagem real fornecida pelo cliente */}
                 <div className="relative w-[90%] mx-auto aspect-square bg-slate-50/55 rounded-xl flex items-center justify-center p-1 border border-neutral-100 overflow-hidden">
                   <img 
-                    src="https://52cultosinfantis.netlify.app/assets/produto-cultinho-06.png" 
+                    src="https://cultinhoclonanaoooo.netlify.app/assets/produto-cultinho-06.png" 
                     alt="Plano Essencial" 
                     className="w-full h-full object-contain"
                     referrerPolicy="no-referrer"
@@ -608,7 +608,7 @@ export default function App() {
                 {/* Imagem real fornecida pelo cliente */}
                 <div className="relative w-[90%] mx-auto aspect-square bg-slate-50/55 rounded-xl flex items-center justify-center p-1 border border-neutral-100 overflow-hidden">
                   <img 
-                    src="https://52cultosinfantis.netlify.app/assets/plano-com-bonus-1990.webp" 
+                    src="https://cultinhoclonanaoooo.netlify.app/assets/plano-com-bonus-1990.webp" 
                     alt="Plano Super Combo" 
                     className="w-full h-full object-contain"
                     referrerPolicy="no-referrer"

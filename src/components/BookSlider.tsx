@@ -14,25 +14,25 @@ const CAROUSEL_SLIDES: SlideData[] = [
     title: "Roteiros prontos para cada semana",
     badge: "Plano Anual",
     desc: "Uma estrutura organizada para facilitar sua preparação ao longo de todo o ano.",
-    image: "https://52cultosinfantis.netlify.app/assets/roteiros-prontos-semana.webp"
+    image: "https://cultinhoclonanaoooo.netlify.app/assets/roteiros-prontos-semana.webp"
   },
   {
     title: "Atividades e apoio visual",
     badge: "Material de Apoio",
     desc: "Lindo apoio visual com desenhos de colorir para fixar o ensino na cabecinha das crianças.",
-    image: "https://52cultosinfantis.netlify.app/assets/atividades-apoio-visual.webp"
+    image: "https://cultinhoclonanaoooo.netlify.app/assets/atividades-apoio-visual.webp"
   },
   {
     title: "1 ano de atividades práticas",
     badge: "Conteúdo Prático",
     desc: "Roteiros bíblicos com atividades de fixação prontas para o ano todo.",
-    image: "https://52cultosinfantis.netlify.app/assets/produto-cultinho-06.png"
+    image: "https://cultinhoclonanaoooo.netlify.app/assets/produto-cultinho-06.png"
   },
   {
     title: "Acesso digital imediato",
     badge: "Acesso Digital",
     desc: "Pastas organizadas para baixar direto no seu celular, WhatsApp ou e-mail.",
-    image: "https://52cultosinfantis.netlify.app/assets/acesso-digital-imediato.webp"
+    image: "https://cultinhoclonanaoooo.netlify.app/assets/acesso-digital-imediato.webp"
   }
 ];
 

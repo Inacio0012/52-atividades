@@ -53,7 +53,7 @@ export default function CheckoutModal({ selectedPlan, onClose }: CheckoutModalPr
             {/* Imagem real fornecida pelo cliente para O Que Vem No Kit */}
             <div className="my-4 w-full flex flex-col items-center">
               <img 
-                src="https://52cultosinfantis.netlify.app/assets/produto-cultinho-06.png" 
+                src="https://cultinhoclonanaoooo.netlify.app/assets/produto-cultinho-06.png" 
                 className="w-[185px] h-auto object-contain drop-shadow" 
                 alt="O que você vai receber no Kit Completo" 
                 referrerPolicy="no-referrer"
