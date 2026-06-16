@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.5
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Sparkles,
@@ -21,6 +21,31 @@ import FAQSection from "./components/FAQSection";
 import CheckoutModal from "./components/CheckoutModal";
 
 export default function App() {
+  // Anti-download & anti-copy protection for all images and videos
+  useEffect(() => {
+    const handleContextMenu = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "IMG" || target.tagName === "VIDEO")) {
+        e.preventDefault();
+      }
+    };
+    
+    const handleDragStart = (e: DragEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "IMG" || target.tagName === "VIDEO")) {
+        e.preventDefault();
+      }
+    };
+
+    document.addEventListener("contextmenu", handleContextMenu);
+    document.addEventListener("dragstart", handleDragStart);
+
+    return () => {
+      document.removeEventListener("contextmenu", handleContextMenu);
+      document.removeEventListener("dragstart", handleDragStart);
+    };
+  }, []);
+
   const [selectedPlan, setSelectedPlan] = useState<{
     id: string;
     title: string;
@@ -699,6 +724,47 @@ export default function App() {
             </div>
           </div>
 
+          {/* Quem Sou Eu */}
+          <div className="mx-auto mt-14 max-w-[352px] bg-white border border-neutral-200 rounded-3xl p-6 shadow-sm">
+            <h2 className="text-center font-extrabold text-2xl text-foreground mb-6">
+              Quem Sou Eu?
+            </h2>
+            <div className="flex justify-center mb-6">
+              <div className="relative w-32 h-32 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                <img 
+                  src="https://i.imgur.com/L5AyQD6.jpeg" 
+                  alt="Maria Ester" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+            </div>
+            <div className="space-y-4 text-[13.5px] text-neutral-700 leading-relaxed text-left">
+              <p>
+                <strong className="font-extrabold text-foreground">Muito prazer, tia! Eu sou a Maria Ester.</strong><br/>
+                E assim como você, eu sei o que é estar na linha de frente do Ministério Infantil.
+              </p>
+              <p>
+                Se você já passou a madrugada de sábado cortando EVA, caçando ideias impossíveis no Pinterest e gastando do próprio bolso para a salinha de domingo... saiba que eu te entendo perfeitamente. Eu vivi esse ciclo de exaustão na pele.
+              </p>
+              <p>
+                Por muito tempo, eu vi o cansaço roubar a alegria do nosso chamado. Vi professoras incríveis se sentindo apenas "babás" de luxo durante o culto, com medo das crianças não prestarem atenção e virarem a sala de cabeça para baixo.
+              </p>
+              <p>
+                <strong className="font-extrabold text-[#10b981]">Foi exatamente para dar um basta nisso que eu decidi agir.</strong>
+              </p>
+              <p>
+                Eu reuni tudo o que realmente funciona e estruturei um método prático e 100% bíblico. O meu objetivo ao liberar este acervo com 1 ano inteiro de atividades prontas para imprimir não é apenas te entregar arquivos no computador.
+              </p>
+              <p>
+                A minha missão é te devolver a paz no fim de semana e a segurança de que você está ensinando a Palavra de Deus com excelência.
+              </p>
+              <p className="p-3 bg-[color:var(--soft-mint)]/30 border border-emerald-100 rounded-xl font-medium text-foreground">
+                Você tem um chamado lindo e não precisa mais improvisar. A sua salinha tem jeito, e eu estou aqui para te ajudar a dominá-la!
+              </p>
+            </div>
+          </div>
+
           {/* 18. FAQ Heading */}
           <h2 className="mt-14 text-center font-extrabold text-2xl text-foreground">
             Dúvidas Frequentes
@@ -733,7 +799,7 @@ export default function App() {
             </p>
             <div className="mt-4">
               <a
-                href="https://www.instagram.com/ministerio_infantil52/"
+                href="https://www.instagram.com/maria_ester052/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 w-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 hover:opacity-90 text-white font-extrabold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-opacity shadow"
@@ -746,13 +812,13 @@ export default function App() {
           {/* Real Instagram Anchor & Watermark */}
           <div className="pt-8 mt-12 border-t border-neutral-100 flex flex-col items-center justify-center gap-3">
             <a
-              href="https://www.instagram.com/ministerio_infantil52/"
+              href="https://www.instagram.com/maria_ester052/"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-xs font-black text-[#111827] hover:text-[#10b981] transition-colors"
             >
               <span className="text-rose-500 text-lg">📸</span>
-              <span>@ministerio_infantil52</span>
+              <span>@maria_ester052</span>
             </a>
             <p className="text-[10px] text-neutral-400">
               © {new Date().getFullYear()} 1 Ano de Atividade Infantil Bíblica. Todos os Direitos Reservados.
