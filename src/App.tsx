@@ -16,9 +16,69 @@ import {
   Code,
   Mail
 } from "lucide-react";
-import BookSlider from "./components/BookSlider";
 import FAQSection from "./components/FAQSection";
 import CheckoutModal from "./components/CheckoutModal";
+
+// Fake Purchase Notification System
+const NAMES = ["Ana Paula", "Carla", "Bruna M.", "Juliana", "Vanessa", "Fernanda", "Camila T.", "Amanda", "Letícia", "Patrícia", "Mariana", "Silvia"];
+const LOCATIONS = ["São Paulo, SP", "Rio de Janeiro, RJ", "Belo Horizonte, MG", "Curitiba, PR", "Salvador, BA", "Fortaleza, CE", "Brasília, DF", "Campinas, SP", "Goiânia, GO", "Recife, PE", "Manaus, AM", "Porto Alegre, RS"];
+
+function PurchaseNotification() {
+  const [isVisible, setIsVisible] = useState(false);
+  const [purchaseData, setPurchaseData] = useState({ name: "", location: "", time: "" });
+
+  useEffect(() => {
+    // Show first notification after 5 seconds
+    const initialTimeout = setTimeout(showNotification, 5000);
+    return () => clearTimeout(initialTimeout);
+  }, []);
+
+  const showNotification = () => {
+    const randomName = NAMES[Math.floor(Math.random() * NAMES.length)];
+    const randomLocation = LOCATIONS[Math.floor(Math.random() * LOCATIONS.length)];
+    const randomTime = Math.floor(Math.random() * 10) + 1; // 1 to 10 minutes ago
+    
+    setPurchaseData({ name: randomName, location: randomLocation, time: `${randomTime} min` });
+    setIsVisible(true);
+
+    // Hide after 5 seconds
+    setTimeout(() => {
+      setIsVisible(false);
+      // Schedule next notification (randomly between 15 and 35 seconds)
+      const nextDelay = Math.floor(Math.random() * 20000) + 15000;
+      setTimeout(showNotification, nextDelay);
+    }, 5000);
+  };
+
+  return (
+    <AnimatePresence>
+      {isVisible && (
+        <motion.div
+          initial={{ opacity: 0, y: 50, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: 20, scale: 0.9 }}
+          className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-80 bg-white shadow-2xl rounded-xl border border-green-100 p-3 z-50 flex items-center gap-3 overflow-hidden"
+        >
+          <div className="absolute top-0 left-0 w-1 h-full bg-green-500"></div>
+          <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 text-green-600">
+            <Check size={20} strokeWidth={3} />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-[12px] text-neutral-600 truncate">
+              <strong className="text-neutral-900 font-bold">{purchaseData.name}</strong> de {purchaseData.location}
+            </p>
+            <p className="text-[11.5px] font-bold text-green-600 mt-0.5">
+              Acabou de comprar o Kit! 🔥
+            </p>
+            <p className="text-[10px] text-neutral-400 mt-0.5">
+              Há {purchaseData.time}
+            </p>
+          </div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
 
 export default function App() {
   // Anti-download & anti-copy protection for all images and videos
@@ -54,7 +114,7 @@ export default function App() {
 
   // Configured with persistent local video embed simulation space
   const [embedCode, setEmbedCode] = useState<string>(() => {
-    return localStorage.getItem("vsl_embed_code") || `<iframe src="https://imgur.com/a/e3h1EYU/embed?pub=true" style="border: 0; width: 100%; height: 100%; position: absolute; top:0; left:0;" allowfullscreen></iframe>`;
+    return localStorage.getItem("vsl_embed_code") || `<iframe src="https://imgur.com/a/8IkQnBp/embed?pub=true" style="border: 0; width: 100%; height: 100%; position: absolute; top:0; left:0;" allowfullscreen></iframe>`;
   });
   const [showConfig, setShowConfig] = useState<boolean>(false);
   const [tempEmbed, setTempEmbed] = useState<string>("");
@@ -83,28 +143,30 @@ export default function App() {
     setSelectedPlan({ id, title, price });
   };
 
+  const today = new Date();
+  const formattedDate = `${String(today.getDate()).padStart(2, '0')}/${String(today.getMonth() + 1).padStart(2, '0')}/${today.getFullYear()}`;
+
   return (
     <div id="sales-page-root" className="min-h-screen bg-[#F8FAF7] text-[#111827] font-sans antialiased overflow-x-hidden selection:bg-emerald-100 selection:text-emerald-800">
+      <PurchaseNotification />
       
-      <main className="min-h-screen bg-white">
-        <div className="max-w-[480px] mx-auto px-5 pt-8 pb-12">
-          
-          {/* 1. Header Badge */}
-          <div className="flex justify-center">
-            <span className="inline-block rounded-full bg-[color:var(--soft-mint)] border border-[color:var(--brand-green)]/30 text-[color:var(--brand-green-dark)] font-bold text-xs px-4 py-1.5 tracking-wide uppercase">
-              1 Ano de Atividades
-            </span>
-          </div>
+      {/* 1. Top Offer Banner */}
+      <div className="w-full bg-[#E32636] py-2.5 text-center text-white text-sm md:text-base font-extrabold uppercase tracking-wide flex items-center justify-center gap-1.5 shadow-sm">
+        <span className="text-[#FFC107] text-lg leading-none">⚡</span>
+        <span>OFERTA VÁLIDA SOMENTE {formattedDate}</span>
+      </div>
 
+      <main className="min-h-screen bg-white">
+        <div className="max-w-[480px] mx-auto px-5 pt-6 pb-12">
+          
           {/* 2. Headline Curta e Imponente */}
-          <h1 className="mx-auto mt-3 max-w-[390px] text-[24px] font-black text-center leading-tight text-foreground text-balance">
-            <span className="text-[color:var(--badge-orange)] block text-xs tracking-wider font-extrabold uppercase mb-1">CHEGA DE IMPROVISAR DE MADRUGADA!</span>
-            Atividades Bíblicas Prontas para Imprimir!
+          <h1 className="mx-auto mt-3 max-w-[390px] text-[26px] font-black text-center leading-tight text-foreground text-balance">
+            Crie <span className="relative inline-block"><span className="relative z-10">Lembrancinhas</span><span className="absolute bottom-0 left-0 w-full h-[4px] bg-red-500 rounded-full z-0 opacity-80"></span></span> Cristãs Inesquecíveis.
           </h1>
 
           {/* 3. Sub-headline */}
           <p className="mx-auto mt-3 max-w-[350px] text-center text-[13.5px] leading-relaxed text-foreground/85 text-balance">
-            O material definitivo para a Tia da Salinha. Sem complicação: é só baixar pelo celular, imprimir e ver as crianças aprendendo de verdade.
+            Receba 12 modelos lindos de mini-bíblias e 120 versículos para imprimir, recortar e montar. O gesto perfeito para edificar vidas!
           </p>
 
           {/* 4. Portrait Video Frame inside Smartphone Mockup */}
@@ -120,14 +182,11 @@ export default function App() {
               {embedCode ? (
                 embedCode.includes("imgur.com") ? (
                   <video
-                    src="https://i.imgur.com/8lGnT4F.mp4"
-                    className="absolute inset-0 w-full h-full object-cover rounded-[30px] pointer-events-none"
+                    src="https://i.imgur.com/CM64h5a.mp4"
+                    className="absolute inset-0 w-full h-full object-cover rounded-[30px]"
                     playsInline
-                    autoPlay
-                    muted
-                    loop
-                    controls={false}
-                    controlsList="nodownload nofullscreen noremoteplayback"
+                    controls
+                    controlsList="nodownload noremoteplayback"
                     onContextMenu={(e) => e.preventDefault()}
                     referrerPolicy="no-referrer"
                   />
@@ -182,28 +241,28 @@ export default function App() {
           <ul className="mx-auto mt-6 max-w-[280px] flex flex-col gap-2">
             <li className="flex items-center gap-2.5 rounded-full border border-[color:var(--brand-green)]/15 bg-[color:var(--soft-mint)]/70 pl-1.5 pr-4 py-1.5 shadow-sm">
               <span className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-blue-500">
-                <BookOpen className="w-4 h-4 text-white" />
+                <Check className="w-4 h-4 text-white" />
               </span>
               <span className="text-[12.5px] leading-snug text-foreground/90">
-                1 ano de roteiros bíblicos completos
+                12 Modelos Exclusivos
               </span>
             </li>
             
             <li className="flex items-center gap-2.5 rounded-full border border-[color:var(--brand-green)]/15 bg-[color:var(--soft-mint)]/70 pl-1.5 pr-4 py-1.5 shadow-sm">
               <span className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-pink-500">
-                <Printer className="w-4 h-4 text-white" />
+                <Check className="w-4 h-4 text-white" />
               </span>
               <span className="text-[12.5px] leading-snug text-foreground/90">
-                Atividades prontas em PDF de alta qualidade
+                120 Versículos Edificantes
               </span>
             </li>
 
             <li className="flex items-center gap-2.5 rounded-full border border-[color:var(--brand-green)]/15 bg-[color:var(--soft-mint)]/70 pl-1.5 pr-4 py-1.5 shadow-sm">
               <span className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center bg-emerald-500">
-                <Mail className="w-4 h-4 text-white" />
+                <Check className="w-4 h-4 text-white" />
               </span>
               <span className="text-[12.5px] leading-snug text-foreground/90">
-                Entrega automática diretamente no seu E-mail
+                Arquivo Pronto para Impressão
               </span>
             </li>
           </ul>
@@ -214,143 +273,31 @@ export default function App() {
               onClick={handleScrollToOffers}
               className="animate-cta-breathe block w-full max-w-[370px] mx-auto rounded-xl bg-[color:var(--brand-green)] hover:bg-[color:var(--brand-green-dark)] transition-colors text-white font-extrabold py-4 text-[13.5px] px-2 tracking-wide text-center shadow-lg uppercase cursor-pointer"
             >
-              👉 QUERO 1 ANO DE ATIVIDADES BÍBLICAS
+              QUERO MEUS MOLDES POR APENAS R$ 9,90
             </button>
             <p className="mt-2 text-[11px] text-neutral-500 font-medium">
-              🔒 Pagamento Seguro • Acesso Imediato • Risco Zero
+              🔒 Pagamento 100% seguro | Receba no e-mail
             </p>
           </div>
 
           {/* SEÇÃO 1 - IDENTIFICAÇÃO E DOR */}
           <div className="mx-auto mt-12 max-w-[370px] bg-amber-50/50 border border-amber-100 rounded-3xl p-5 shadow-sm text-left">
             <h2 className="text-base font-extrabold text-[#111827] flex items-center gap-1.5 leading-snug">
-              <span className="text-xl">👩‍🏫</span> Eu sei exatamente o que você passa, Tia...
+              <span className="text-xl">🎁</span> Um simples gesto de carinho que custa baratinho...
             </h2>
             <p className="mt-3 text-[13.5px] leading-relaxed text-neutral-700">
-              Varoa, vamos falar a verdade. Você ama o seu chamado, mas já não aguenta mais:
+              Às vezes, você quer demonstrar o quanto as pessoas são importantes, mas falta tempo ou o orçamento está apertado. Com as Mini-Bíblias, você tem um presente que demonstra cuidado e dedicação pelo próximo, sem pesar no bolso. É só imprimir, recortar e montar. Rapidinho você faz várias!
             </p>
-            <ul className="mt-4 space-y-3">
-              <li className="flex gap-2.5 items-start">
-                <span className="text-red-500 text-sm mt-0.5">❌</span>
-                <span className="text-[13px] text-neutral-700 leading-snug">
-                  Perder horas no Pinterest caçando ideias lindas, mas impossíveis de fazer.
-                </span>
-              </li>
-              <li className="flex gap-2.5 items-start">
-                <span className="text-red-500 text-sm mt-0.5">❌</span>
-                <span className="text-[13px] text-neutral-700 leading-snug">
-                  Gastar do próprio bolso com EVA, cola e materiais caros toda semana.
-                </span>
-              </li>
-              <li className="flex gap-2.5 items-start">
-                <span className="text-red-500 text-sm mt-0.5">❌</span>
-                <span className="text-[13px] text-neutral-700 leading-snug">
-                  Sentir aquele desespero de última hora com medo das crianças não prestarem atenção e virarem a salinha de cabeça para baixo.
-                </span>
-              </li>
-            </ul>
-            <div className="mt-5 pt-4 border-t border-amber-100/70 text-[13px] leading-relaxed text-[#10B981] font-bold">
-              🕊️ A paz chegou! Você não é babá, você é professora. E para dominar a salinha e ensinar a Palavra com excelência, você só precisa do material certo.
-            </div>
           </div>
 
-          {/* 7. Benefits Heading */}
-          <h2 className="mx-auto mt-12 max-w-[350px] text-[20px] font-extrabold text-center text-foreground leading-snug text-balance">
-            O que as crianças vão aprender com as atividades
-          </h2>
-
-          {/* 8. Interactive Booklet page preview slider */}
-          <BookSlider />
-
-          {/* 9. Bullets details of items to learn */}
-          <ul className="mx-auto mt-6 max-w-[340px] space-y-2.5">
-            <li className="flex gap-3 items-center rounded-2xl bg-[color:var(--soft-mint)]/60 border border-[color:var(--brand-green)]/20 px-4 py-3">
-              <span className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-purple-500">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-none stroke-current stroke-[2.4]" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-                </svg>
-              </span>
-              <span className="text-[14.5px] leading-snug text-foreground/90 text-balance">
-                Memorizar salmos e histórias bíblicas brincando
-              </span>
-            </li>
-
-            <li className="flex gap-3 items-center rounded-2xl bg-[color:var(--soft-mint)]/60 border border-[color:var(--brand-green)]/20 px-4 py-3">
-              <span className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-sky-500">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-none stroke-current stroke-[2.4]" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <circle cx="12" cy="12" r="3" />
-                </svg>
-              </span>
-              <span className="text-[14.5px] leading-snug text-foreground/90 text-balance">
-                Visualizar a lição com cartilhas ilustrativas lindas
-              </span>
-            </li>
-
-            <li className="flex gap-3 items-center rounded-2xl bg-[color:var(--soft-mint)]/60 border border-[color:var(--brand-green)]/20 px-4 py-3">
-              <span className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-orange-500">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-none stroke-current stroke-[2.4]" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-              </span>
-              <span className="text-[14.5px] leading-snug text-foreground/90 text-balance">
-                Entender as passagens bíblicas de forma mais direta e marcante
-              </span>
-            </li>
-
-            <li className="flex gap-3 items-center rounded-2xl bg-[color:var(--soft-mint)]/60 border border-[color:var(--brand-green)]/20 px-4 py-3">
-              <span className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-red-500">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-none stroke-current stroke-[2.4]" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
-                  <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" />
-                  <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" />
-                  <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
-                </svg>
-              </span>
-              <span className="text-[14.5px] leading-snug text-foreground/90 text-balance">
-                Participar de dinâmicas divertidas com a turminha toda
-              </span>
-            </li>
-
-            <li className="flex gap-3 items-center rounded-2xl bg-[color:var(--soft-mint)]/60 border border-[color:var(--brand-green)]/20 px-4 py-3">
-              <span className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center bg-emerald-500">
-                <svg viewBox="0 0 24 24" className="w-5 h-5 text-white fill-none stroke-current stroke-[2.4]" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-                  <polyline points="22 4 12 14.01 9 11.01" />
-                </svg>
-              </span>
-              <span className="text-[14.5px] leading-snug text-foreground/90 text-balance">
-                Fixar a lição com roteiros e lembrancinhas prontas
-              </span>
-            </li>
-          </ul>
-
-          {/* 10. Classroom transformation section */}
-          <h2 className="mx-auto mt-12 max-w-[340px] text-[22px] font-extrabold text-center text-foreground leading-snug text-balance">
-            Veja como o material transforma a sala de aula ⭐
-          </h2>
-
-          {/* Classroom photos real grid with modern polaroid aesthetic */}
-          <div className="mx-auto mt-5 max-w-[352px] grid grid-cols-2 gap-3">
-            {[
-              { src: "https://cultinhoclonanaoooo.netlify.app/assets/sala-aula-01.png", label: "Crianças Concentradas" },
-              { src: "https://cultinhoclonanaoooo.netlify.app/assets/sala-aula-02.png", label: "Atividades Práticas" },
-              { src: "https://cultinhoclonanaoooo.netlify.app/assets/sala-aula-03.png", label: "Aprendizado Lúdico" },
-              { src: "https://cultinhoclonanaoooo.netlify.app/assets/sala-aula-04.png", label: "Salinha Cheia e Atenta" }
-            ].map((photo, index) => (
-              <div key={index} className="rounded-2xl overflow-hidden border border-neutral-200/80 bg-white p-2 flex flex-col justify-between shadow-sm hover:shadow transition-shadow">
-                <img 
-                  src={photo.src} 
-                  alt={photo.label} 
-                  className="w-full aspect-square object-cover rounded-xl"
-                  referrerPolicy="no-referrer"
-                />
-                <span className="block text-center text-[10px] uppercase tracking-wider font-extrabold text-[color:var(--brand-green-dark)] mt-2">
-                  {photo.label}
-                </span>
-              </div>
-            ))}
+          {/* 8. Carousel image provided by user */}
+          <div className="mx-auto mt-12 max-w-[352px]">
+            <img 
+              src="https://i.imgur.com/U6tXJ7i.png" 
+              alt="Modelos que você vai receber" 
+              className="w-full h-auto"
+              referrerPolicy="no-referrer"
+            />
           </div>
 
 
@@ -362,11 +309,23 @@ export default function App() {
 
           <ul className="mx-auto mt-5 max-w-[340px] space-y-2.5">
             <li className="flex items-center gap-3 rounded-2xl bg-white border-2 border-dashed border-[color:var(--brand-green)]/30 px-3 py-2.5 shadow-sm">
-              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-purple-500 text-white font-bold">
+              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-blue-100 text-[18px]">
+                🎁
+              </span>
+              <span className="text-[15px] leading-snug text-foreground/90 text-balance">
+                Quer presentear com muito significado, mas está com o orçamento apertado.
+              </span>
+              <svg viewBox="0 0 24 24" className="ml-auto w-4 h-4 text-[color:var(--badge-orange)] fill-[color:var(--badge-orange)] flex-shrink-0">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+              </svg>
+            </li>
+
+            <li className="flex items-center gap-3 rounded-2xl bg-white border-2 border-dashed border-[color:var(--brand-green)]/30 px-3 py-2.5 shadow-sm">
+              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-emerald-100 text-[18px]">
                 👥
               </span>
               <span className="text-[15px] leading-snug text-foreground/90 text-balance">
-                Vai trabalhar temas e lições bíblicas semanais com a turminha
+                Busca a lembrancinha perfeita para células, retiros, casamentos ou batizados.
               </span>
               <svg viewBox="0 0 24 24" className="ml-auto w-4 h-4 text-[color:var(--badge-orange)] fill-[color:var(--badge-orange)] flex-shrink-0">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -374,23 +333,11 @@ export default function App() {
             </li>
 
             <li className="flex items-center gap-3 rounded-2xl bg-white border-2 border-dashed border-[color:var(--brand-green)]/30 px-3 py-2.5 shadow-sm">
-              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-amber-500 text-white font-bold">
-                ⭐
-              </span>
-              <span className="text-[15px] leading-snug text-foreground/90 text-balance">
-                Deseja um culto infantil mais visual, prático e ativo
-              </span>
-              <svg viewBox="0 0 24 24" className="ml-auto w-4 h-4 text-[color:var(--badge-orange)] fill-[color:var(--badge-orange)] flex-shrink-0">
-                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-              </svg>
-            </li>
-
-            <li className="flex items-center gap-3 rounded-2xl bg-white border-2 border-dashed border-[color:var(--brand-green)]/30 px-3 py-2.5 shadow-sm">
-              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-pink-500 text-white font-bold">
+              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-yellow-100 text-[18px]">
                 🖨️
               </span>
               <span className="text-[15px] leading-snug text-foreground/90 text-balance">
-                Deseja materiais e roteiros prontos em alta resolução (PDF)
+                Deseja arquivos prontos em alta resolução (PDF) para imprimir facilmente em casa.
               </span>
               <svg viewBox="0 0 24 24" className="ml-auto w-4 h-4 text-[color:var(--badge-orange)] fill-[color:var(--badge-orange)] flex-shrink-0">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -398,11 +345,11 @@ export default function App() {
             </li>
 
             <li className="flex items-center gap-3 rounded-2xl bg-white border-2 border-dashed border-[color:var(--brand-green)]/30 px-3 py-2.5 shadow-sm">
-              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-sky-500 text-white font-bold">
-                ⏱️
+              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-orange-100 text-[18px]">
+                ✂️
               </span>
               <span className="text-[15px] leading-snug text-foreground/90 text-balance">
-                Prefere focar nas crianças ao invés de buscar atividades do zero
+                Precisa de praticidade rápida: é só imprimir, recortar nas linhas e colar!
               </span>
               <svg viewBox="0 0 24 24" className="ml-auto w-4 h-4 text-[color:var(--badge-orange)] fill-[color:var(--badge-orange)] flex-shrink-0">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -410,11 +357,11 @@ export default function App() {
             </li>
 
             <li className="flex items-center gap-3 rounded-2xl bg-white border-2 border-dashed border-[color:var(--brand-green)]/30 px-3 py-2.5 shadow-sm">
-              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-emerald-500 text-white font-bold">
-                💡
+              <span className="flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center rotate-[-4deg] bg-pink-100 text-[18px]">
+                💖
               </span>
               <span className="text-[15px] leading-snug text-foreground/90 text-balance">
-                Quer pregar a Palavra com amor, criatividade e dinâmicas
+                Quer edificar a vida de outras pessoas espalhando a Palavra de Deus com carinho.
               </span>
               <svg viewBox="0 0 24 24" className="ml-auto w-4 h-4 text-[color:var(--badge-orange)] fill-[color:var(--badge-orange)] flex-shrink-0">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -422,111 +369,116 @@ export default function App() {
             </li>
           </ul>
 
-          {/* 13. Passo a Passo "Como usar na aula"🎒 */}
+          {/* 13. Passo a Passo */}
           <div className="mx-auto mt-12 flex flex-col items-center">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-[color:var(--soft-mint)] border border-[color:var(--brand-green)]/30 px-3 py-1 text-[10px] font-extrabold uppercase tracking-widest text-[color:var(--brand-green-dark)]">
               ✏️ Passo a passo
             </span>
-            <h2 className="mt-3 text-[26px] font-extrabold text-center leading-tight text-balance">
-              Como usar<span className="relative inline-block mx-1">
+            <h2 className="mt-3 text-[26px] font-extrabold text-center leading-tight text-balance flex items-center justify-center flex-wrap">
+              Como montar<span className="relative inline-block mx-1">
                 <span className="absolute inset-x-0 bottom-1 h-2.5 bg-[color:var(--badge-orange)]/40 rounded-full -z-0"></span>
-                <span className="relative z-10 text-[color:var(--badge-orange)]">na aula</span>
+                <span className="relative z-10 text-[color:var(--badge-orange)]">em 3 minutos</span>
               </span>
-              <span className="ml-1">🎒</span>
+              <span className="ml-1 inline-flex items-center justify-center">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="text-red-500 animate-bounce">
+                  <path d="M12 5v14M19 12l-7 7-7-7"/>
+                </svg>
+              </span>
             </h2>
             <div className="mt-2 flex items-center gap-2">
               <span className="h-[3px] w-6 rounded-full bg-[color:var(--brand-green)]"></span>
               <span className="w-1.5 h-1.5 rounded-full bg-[color:var(--badge-orange)]"></span>
               <span className="h-[3px] w-6 rounded-full bg-[color:var(--brand-green)]"></span>
             </div>
+            
+            <div className="mt-6 w-full max-w-[352px] rounded-xl overflow-hidden border border-neutral-200/80 shadow-sm">
+              <img 
+                src="https://i.imgur.com/2TQjRDw.png" 
+                alt="Passo a passo como montar" 
+                className="w-full h-auto"
+                referrerPolicy="no-referrer"
+              />
+            </div>
           </div>
 
-          {/* 14. Seção 2: O PRODUTO COMPLETO ✨ */}
-          <div className="mx-auto mt-6 flex flex-col items-center">
-            <h2 className="relative flex flex-col items-center text-center text-foreground px-4">
-              <span className="relative mt-2 inline-block text-[21px] font-black leading-snug text-[color:var(--brand-green-dark)] text-balance">
-                <span aria-hidden="true" className="absolute -left-6 -top-2 text-lg rotate-[-12deg]">✨</span>
-                Veja tudo o que você vai receber hoje:
-                <span aria-hidden="true" className="absolute inset-x-0 -bottom-1 h-2 bg-[color:var(--badge-orange)]/45 rounded-full -z-0"></span>
-              </span>
-            </h2>
-          </div>
 
-          {/* Grid de imagens do produto real fornecidas pelo cliente */}
-          <div className="mx-auto mt-5 max-w-[352px] grid grid-cols-2 gap-3.5">
-            {[
-              {
-                src: "https://cultinhoclonanaoooo.netlify.app/assets/produto-cultinho-06.png",
-                title: "1 Ano de Atividades",
-                desc: "Roteiros bíblicos com atividades de fixação para o ano todo."
-              },
-              {
-                src: "https://cultinhoclonanaoooo.netlify.app/assets/atividades-apoio-visual.webp",
-                title: "Atividades & Apoio",
-                desc: "Lindo apoio visual com desenhos de colorir para a sala de aula."
-              },
-              {
-                src: "https://cultinhoclonanaoooo.netlify.app/assets/roteiros-prontos-semana.webp",
-                title: "Roteiros Prontos",
-                desc: "Planos semanais prontinhos focados no aprendizado prático."
-              },
-              {
-                src: "https://cultinhoclonanaoooo.netlify.app/assets/acesso-digital-imediato.webp",
-                title: "Acesso Digital Imediato",
-                desc: "Baixe direto pelo seu celular em formato PDF organizado."
-              }
-            ].map((item, index) => (
-              <div key={index} className="rounded-2xl border border-neutral-200/90 bg-white p-2.5 flex flex-col justify-between shadow-sm hover:shadow-md transition-shadow">
-                <img 
-                  src={item.src} 
-                  alt={item.title} 
-                  className="w-full aspect-square object-contain bg-neutral-50 rounded-xl"
-                  referrerPolicy="no-referrer"
-                />
-                <div className="mt-2 text-left">
-                  <h4 className="text-[11px] font-black tracking-tight text-neutral-800 leading-tight">{item.title}</h4>
-                  <p className="text-[9px] text-neutral-500 leading-snug mt-0.5">{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <ul className="mx-auto mt-6 max-w-[340px] space-y-4 px-2">
-            <li className="flex gap-3 items-start text-[14px] text-foreground/90">
-              <span className="mt-0.5 text-lg flex-shrink-0">📖</span>
-              <span>
-                <strong className="font-bold">1 Ano Inteiro de Histórias:</strong>{" "}
-                <span className="text-neutral-700">Roteiros fáceis, bíblicos e diretos ao ponto. Diretamente no seu E-mail.</span>
-              </span>
-            </li>
-
-            <li className="flex gap-3 items-start text-[14px] text-foreground/90">
-              <span className="mt-0.5 text-lg flex-shrink-0">🖍️</span>
-              <span>
-                <strong className="font-bold">Atividades para os Pequenos:</strong>{" "}
-                <span className="text-neutral-700">Desenhos maravilhosos para colorir e fixar o que aprenderam no culto.</span>
-              </span>
-            </li>
-
-            <li className="flex gap-3 items-start text-[14px] text-foreground/90">
-              <span className="mt-0.5 text-lg flex-shrink-0">✂️</span>
-              <span>
-                <strong className="font-bold">Dinâmicas Práticas:</strong>{" "}
-                <span className="text-neutral-700">Aplicações simples que não exigem comprar materiais caros ou difíceis.</span>
-              </span>
-            </li>
-
-            <li className="flex gap-3 items-start text-[14px] text-foreground/90">
-              <span className="mt-0.5 text-lg flex-shrink-0">📱</span>
-              <span>
-                <strong className="font-bold">Acesso na Palma da Mão:</strong>{" "}
-                <span className="text-neutral-700">Pastas super organizadas para baixar direto no seu celular.</span>
-              </span>
-            </li>
-          </ul>
 
           {/* 15. Pointer arrows to Pricing offers */}
           <div className="mx-auto mt-1 flex flex-col items-center gap-0 text-[color:var(--badge-orange)]">
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-[13.5px] font-bold text-center mb-6 max-w-[340px] shadow-sm animate-pulse leading-snug">
+              ⚠️ ATENÇÃO: Hoje, <span className="font-black text-red-600">{formattedDate}</span>, é o <span className="underline decoration-2 underline-offset-2">ÚLTIMO DIA</span> para garantir o desconto exclusivo!
+            </div>
+            
+            {/* Feedbacks / Prova Social */}
+            <div className="w-full max-w-[340px] mx-auto mb-6 flex flex-col gap-3 text-left">
+              <h3 className="text-center text-[15px] font-black text-neutral-800 mb-2 uppercase tracking-wide">
+                Quem já comprou, recomenda:
+              </h3>
+              
+              {/* Comment 1 */}
+              <div className="bg-white rounded-xl p-3.5 shadow-sm border border-neutral-100 relative">
+                <div className="flex items-center gap-1 mb-1.5">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={`star-1-${i}`} className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                  <span className="text-[11px] text-neutral-400 ml-1">Há 1 dia</span>
+                </div>
+                <p className="text-[13px] text-neutral-700 leading-snug italic">
+                  "As artes são lindíssimas! Usei no encontro de mulheres da igreja e todo mundo ficou apaixonado. Super fácil de imprimir e cortar, me salvou muito tempo!"
+                </p>
+                <div className="mt-2.5 flex items-center justify-between">
+                  <span className="text-[12px] font-extrabold text-neutral-900">Juliana M.</span>
+                  <span className="text-[9px] uppercase tracking-wider text-green-700 font-bold bg-green-50 border border-green-100 px-2 py-1 rounded-full flex items-center gap-1">
+                    <Check size={10} strokeWidth={3} /> Compra Verificada
+                  </span>
+                </div>
+              </div>
+
+              {/* Comment 2 */}
+              <div className="bg-white rounded-xl p-3.5 shadow-sm border border-neutral-100 relative">
+                <div className="flex items-center gap-1 mb-1.5">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={`star-2-${i}`} className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                  <span className="text-[11px] text-neutral-400 ml-1">Há 3 dias</span>
+                </div>
+                <p className="text-[13px] text-neutral-700 leading-snug italic">
+                  "Gostei muito da qualidade. Imprimi em casa mesmo usando papel comum e a qualidade ficou maravilhosa. Valeu muito a pena, já estou fazendo várias."
+                </p>
+                <div className="mt-2.5 flex items-center justify-between">
+                  <span className="text-[12px] font-extrabold text-neutral-900">Camila T.</span>
+                  <span className="text-[9px] uppercase tracking-wider text-green-700 font-bold bg-green-50 border border-green-100 px-2 py-1 rounded-full flex items-center gap-1">
+                    <Check size={10} strokeWidth={3} /> Compra Verificada
+                  </span>
+                </div>
+              </div>
+
+              {/* Comment 3 */}
+              <div className="bg-white rounded-xl p-3.5 shadow-sm border border-neutral-100 relative">
+                <div className="flex items-center gap-1 mb-1.5">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={`star-3-${i}`} className="w-3.5 h-3.5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                  <span className="text-[11px] text-neutral-400 ml-1">Há 5 dias</span>
+                </div>
+                <p className="text-[13px] text-neutral-700 leading-snug italic">
+                  "Excelente material! Chegou super rápido no e-mail logo depois do pagamento e os versículos são muito bem escolhidos. Recomendo de olhos fechados."
+                </p>
+                <div className="mt-2.5 flex items-center justify-between">
+                  <span className="text-[12px] font-extrabold text-neutral-900">Ana Paula R.</span>
+                  <span className="text-[9px] uppercase tracking-wider text-green-700 font-bold bg-green-50 border border-green-100 px-2 py-1 rounded-full flex items-center gap-1">
+                    <Check size={10} strokeWidth={3} /> Compra Verificada
+                  </span>
+                </div>
+              </div>
+            </div>
+
             <span className="text-[13px] font-extrabold uppercase tracking-wider rotate-[-3deg] bg-[color:var(--soft-mint)] px-3 py-1 rounded-full border-2 border-dashed border-[color:var(--brand-green)]/40 text-[color:var(--brand-green-dark)]">
               👇 Garanta o seu agora
             </span>
@@ -537,158 +489,90 @@ export default function App() {
           </div>
 
           {/* 16. Precise Two-Column comparative Pricing plans ("ofertas") */}
-          <div id="ofertas" className="mt-2 w-[105%] -ml-[2.5%] grid grid-cols-2 gap-2 items-start scroll-mt-6">
+          <div id="ofertas" className="mt-6 w-full flex flex-col items-center justify-center scroll-mt-6 px-2">
             
-            {/* Offer 1: Essential Bundle */}
-            <div className="relative rounded-2xl bg-white border-2 border-[color:var(--soft-mint)] shadow-md overflow-hidden flex flex-col">
-              <div className="bg-[color:var(--soft-mint)] text-[color:var(--brand-green-dark)] text-[10px] font-black px-2 py-1.5 uppercase tracking-wider text-center">
-                Oferta Básica
+            <div className="relative rounded-3xl bg-white border-2 border-[color:var(--brand-green)] shadow-xl overflow-hidden flex flex-col w-full max-w-[380px]">
+              {/* Tag Superior */}
+              <div className="bg-gradient-to-r from-orange-500 to-amber-500 text-white text-[12px] font-black px-3 py-2 uppercase tracking-widest text-center shadow-sm relative z-10">
+                🔥 OFERTA ÚNICA E ESPECIAL
               </div>
-              <div className="relative bg-white px-3 pt-3 pb-2 overflow-hidden">
-                <div className="text-center mb-2 min-h-[58px] flex flex-col justify-center">
-                  <h3 className="text-[13.5px] font-extrabold text-foreground leading-tight">Plano Essencial</h3>
-                  <p className="mt-1 text-[10px] text-muted-foreground leading-tight">
-                    Apenas 1 ano de atividade infantil bíblica, sem materiais de dinâmicas extras.
+              
+              <div className="px-5 pt-6 pb-4">
+                <div className="text-center mb-4">
+                  <h3 className="text-[22px] font-black text-foreground leading-tight">
+                    Kit Completo: Mini-Bíblias para Imprimir
+                  </h3>
+                  <p className="mt-2 text-[13px] text-muted-foreground leading-snug font-medium px-1">
+                    O pacote digital com tudo que você precisa para criar lembrancinhas inesquecíveis hoje mesmo, pagando uma única vez.
                   </p>
                 </div>
                 
-                {/* Imagem real fornecida pelo cliente */}
-                <div className="relative w-[90%] mx-auto aspect-square bg-slate-50/55 rounded-xl flex items-center justify-center p-1 border border-neutral-100 overflow-hidden">
+                {/* Imagem do Mockup */}
+                <div className="relative w-full aspect-square bg-slate-50/55 rounded-2xl flex items-center justify-center p-2 mb-5">
                   <img 
-                    src="https://cultinhoclonanaoooo.netlify.app/assets/produto-cultinho-06.png" 
-                    alt="Plano Essencial" 
-                    className="w-full h-full object-contain"
+                    src="https://i.imgur.com/uR2eQBb.png" 
+                    alt="Kit Completo" 
+                    className="w-full h-full object-contain mix-blend-multiply"
                     referrerPolicy="no-referrer"
                   />
                 </div>
-              </div>
 
-              <div className="px-3 py-3 flex flex-col">
-                <ul className="space-y-1.5 mb-3">
-                  <li className="flex items-start gap-1.5 px-1.5 py-1">
-                    <span className="mt-0.5 w-4 h-4 flex-shrink-0 bg-[color:var(--soft-mint)] rounded-full flex items-center justify-center">
-                      <svg viewBox="0 0 24 24" className="w-3 h-3 text-[color:var(--brand-green-dark)] fill-none stroke-current stroke-[3]">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </span>
-                    <span className="text-[11px] text-foreground/80 leading-snug">1 ano de atividade infantil bíblica totalmente pronta</span>
-                  </li>
+                {/* Caixa de Destaque / Empilhamento */}
+                <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-4 mb-5">
+                  <h4 className="text-[13px] font-extrabold text-blue-900 mb-3 uppercase tracking-wide flex items-center gap-1.5">
+                    <span>✅</span> O ACESSO COMPLETO INCLUI:
+                  </h4>
+                  
+                  <ul className="space-y-3">
+                    <li className="flex gap-2 items-start text-[13px] text-neutral-700 leading-snug">
+                      <span className="flex-shrink-0 text-base mt-0.5">📖</span>
+                      <span><strong className="font-bold text-neutral-900">12 Modelos de Capas Exclusivas</strong> (Artes delicadas em alta resolução)</span>
+                    </li>
+                    <li className="flex gap-2 items-start text-[13px] text-neutral-700 leading-snug">
+                      <span className="flex-shrink-0 text-base mt-0.5">✨</span>
+                      <span><strong className="font-bold text-neutral-900">120 Versículos Bíblicos Selecionados</strong> (Para edificar e encorajar)</span>
+                    </li>
+                    <li className="flex gap-2 items-start text-[13px] text-neutral-700 leading-snug">
+                      <span className="flex-shrink-0 text-base mt-0.5">✂️</span>
+                      <span><strong className="font-bold text-neutral-900">Design Otimizado para Impressão</strong> (Gaste pouca tinta e papel)</span>
+                    </li>
+                    <li className="flex gap-2 items-start text-[13px] text-neutral-700 leading-snug">
+                      <span className="flex-shrink-0 text-base mt-0.5">📱</span>
+                      <span><strong className="font-bold text-neutral-900">Acesso Digital Imediato</strong> (Baixe direto no celular ou computador)</span>
+                    </li>
+                    <li className="flex gap-2 items-start text-[13px] text-neutral-700 leading-snug">
+                      <span className="flex-shrink-0 text-base mt-0.5">♾️</span>
+                      <span><strong className="font-bold text-neutral-900">Acesso Vitalício</strong> (O arquivo é seu para sempre, imprima quantas quiser)</span>
+                    </li>
+                  </ul>
+                </div>
 
-                  <li className="flex items-start gap-1.5 px-1.5 py-1">
-                    <span className="mt-0.5 w-4 h-4 flex-shrink-0 bg-[color:var(--soft-mint)] rounded-full flex items-center justify-center">
-                      <svg viewBox="0 0 24 24" className="w-3 h-3 text-[color:var(--brand-green-dark)] fill-none stroke-current stroke-[3]">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </span>
-                    <span className="text-[11px] text-foreground/80 leading-snug">Planos e Roteiros em PDF</span>
-                  </li>
-
-                  <li className="flex items-start gap-1.5 px-1.5 py-1">
-                    <span className="mt-0.5 w-4 h-4 flex-shrink-0 bg-[color:var(--soft-mint)] rounded-full flex items-center justify-center">
-                      <svg viewBox="0 0 24 24" className="w-3 h-3 text-[color:var(--brand-green-dark)] fill-none stroke-current stroke-[3]">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </span>
-                    <span className="text-[11px] text-foreground/80 leading-snug">Atividades de colorir para a sala</span>
-                  </li>
-                </ul>
-
-                <div className="bg-[color:var(--soft-mint)]/70 rounded-xl px-2 py-2 text-center mb-2">
-                  <p className="text-muted-foreground text-[10px]">De <span className="line-through">R$29</span> por</p>
-                  <div className="mt-1 flex items-center justify-center">
-                    <span className="text-[30px] font-extrabold text-[color:var(--brand-green-dark)] leading-none">R$10</span>
+                {/* Preço */}
+                <div className="text-center mb-5 flex flex-col items-center">
+                  <span className="text-neutral-500 text-sm font-semibold line-through decoration-red-500/50 decoration-2">De: R$ 59,90</span>
+                  <span className="text-neutral-600 text-xs font-bold uppercase tracking-widest mt-1 mb-0.5">Por apenas:</span>
+                  <div className="flex items-start justify-center gap-1">
+                    <span className="text-4xl font-black text-green-600 tracking-tighter">R$ 27,90</span>
                   </div>
-                  <p className="mt-1 text-[9px] text-[color:var(--brand-green-dark)] font-bold uppercase tracking-wide">
-                    PAGAMENTO ÚNICO À VISTA
-                  </p>
-                </div>
-
-                <button
-                  onClick={() => handleOpenCheckout("essencial", "1 Ano de Atividade Infantil Bíblica (Essencial)", 10.90)}
-                  className="animate-cta-breathe block text-center w-full bg-[color:var(--brand-green)] hover:bg-[color:var(--brand-green-dark)] text-white font-extrabold py-3 rounded-xl shadow-lg transition-colors active:scale-95 uppercase tracking-wide text-[12px] cursor-pointer"
-                >
-                  QUERO O PLANO BÁSICO
-                </button>
-                <div className="mt-2 flex items-center justify-center gap-1 text-[9px] text-muted-foreground text-center leading-tight">
-                  🔒 Compra segura • Acesso imediato
-                </div>
-              </div>
-            </div>
-
-            {/* Offer 2: Premium Super combo with bônus */}
-            <div className="relative rounded-2xl bg-white border-2 border-[color:var(--badge-orange)]/50 shadow-lg overflow-hidden flex flex-col">
-              <div className="bg-[color:var(--badge-orange)] text-white text-[10px] font-black px-2 py-1.5 shadow-sm uppercase tracking-wider text-center">
-                🔥 Mais Vendido
-              </div>
-              <div className="relative bg-white px-3 pt-3 pb-2 overflow-hidden">
-                <div className="text-center mb-2 min-h-[58px]">
-                  <span className="inline-block text-[9px] uppercase font-bold text-[color:var(--badge-orange)] tracking-widest">
-                    ✨ Super Oferta
+                  <div className="mt-1.5 mb-1.5 bg-red-100 text-red-700 px-3 py-1 rounded-full text-[11px] font-black tracking-wide uppercase border border-red-200 shadow-sm">
+                    🚨 Você está economizando R$ 32,00 agora!
+                  </div>
+                  <span className="text-[11px] text-neutral-500 font-medium mt-1 bg-neutral-100 px-3 py-1 rounded-full">
+                    💳 Parcele em até 12x
                   </span>
-                  <h3 className="mt-1 text-[13.5px] font-extrabold text-foreground leading-tight">
-                    1 ano de atividade infantil bíblica + 100 bônus!
-                  </h3>
                 </div>
 
-                {/* Imagem real fornecida pelo cliente */}
-                <div className="relative w-[90%] mx-auto aspect-square bg-slate-50/55 rounded-xl flex items-center justify-center p-1 border border-neutral-100 overflow-hidden">
-                  <img 
-                    src="https://cultinhoclonanaoooo.netlify.app/assets/plano-com-bonus-1990.webp" 
-                    alt="Plano Super Combo" 
-                    className="w-full h-full object-contain"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-              </div>
-
-              <div className="px-3 py-3 flex flex-col">
-                <ul className="grid grid-cols-1 gap-1 mb-3">
-                  <li className="flex items-start gap-1.5 px-1.5 py-1 rounded-md bg-[color:var(--badge-orange)]/10">
-                    <span className="text-[12px] flex-shrink-0 leading-snug">✅</span>
-                    <span className="text-[11px] leading-snug font-bold text-foreground">Tudo de 1 ano de atividade infantil bíblica</span>
-                  </li>
-
-                  <li className="flex items-start gap-1.5 px-1.5 py-1 rounded-md">
-                    <span className="text-[12px] flex-shrink-0 leading-snug">⭐</span>
-                    <span className="text-[11px] leading-snug text-foreground/80">+100 Atividades Bíblicas Prontas</span>
-                  </li>
-
-                  <li className="flex items-start gap-1.5 px-1.5 py-1 rounded-md">
-                    <span className="text-[12px] flex-shrink-0 leading-snug">🎮</span>
-                    <span className="text-[11px] leading-snug text-foreground/80">+40 Dinâmicas Cristãs Criativas</span>
-                  </li>
-
-                  <li className="flex items-start gap-1.5 px-1.5 py-1 rounded-md">
-                    <span className="text-[12px] flex-shrink-0 leading-snug">🎯</span>
-                    <span className="text-[11px] leading-snug text-foreground/80">Kit de Versículos Ilustrados</span>
-                  </li>
-
-                  <li className="flex items-start gap-1.5 px-1.5 py-1 rounded-md">
-                    <span className="text-[12px] flex-shrink-0 leading-snug">🔢</span>
-                    <span className="text-[11px] leading-snug text-foreground/80">Calendário do Ministério Infantil</span>
-                  </li>
-                </ul>
-
-                <div className="bg-[color:var(--brand-green)]/5 border-2 border-dashed border-[color:var(--brand-green)]/40 rounded-xl px-2 py-2 text-center mb-2">
-                  <p className="text-muted-foreground text-[10px]">De <span className="line-through">R$49,90</span> por</p>
-                  <div className="mt-1 flex items-center justify-center">
-                    <span className="text-[30px] font-black text-[color:var(--brand-green)] leading-none">R$19</span>
-                  </div>
-                  <p className="mt-1 text-[9px] text-[color:var(--brand-green)] font-bold uppercase tracking-wide">
-                    À VISTA PAGAMENTO ÚNICO
-                  </p>
-                </div>
-
-                <a
-                  href="https://pay.wiapy.com/bgZ4gaM6vY"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="animate-cta-breathe block text-center w-full bg-[color:var(--brand-green)] hover:bg-[color:var(--brand-green-dark)] text-white font-extrabold py-3 rounded-xl shadow-lg transition-colors active:scale-95 uppercase tracking-wide text-[12px] cursor-pointer"
+                {/* Botão */}
+                <button
+                  onClick={() => handleOpenCheckout("kit-completo", "Kit Completo: Mini-Bíblias", 27.90)}
+                  className="animate-cta-breathe w-full bg-[#10B981] hover:bg-[#059669] text-white font-black py-4 rounded-xl shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] transition-transform active:scale-[0.98] uppercase tracking-wider text-[15px] cursor-pointer"
                 >
-                  QUERO O SUPER COMBO
-                </a>
-                <div className="mt-2 flex items-center justify-center gap-1 text-[9px] text-muted-foreground text-center leading-tight">
-                  🔒 Acesso imediato • Compra 100% segura
+                  QUERO O KIT COMPLETO AGORA
+                </button>
+                
+                {/* Rodapé Segurança */}
+                <div className="mt-4 flex items-center justify-center text-[10.5px] text-neutral-500 font-medium text-center leading-tight">
+                  🔒 Compra 100% segura • Acesso enviado no e-mail • Garantia de 7 Dias
                 </div>
               </div>
             </div>
@@ -701,25 +585,22 @@ export default function App() {
               <Mail className="w-5 h-5" />
             </div>
             <p className="text-sm font-bold text-foreground leading-snug">
-              Após a confirmação, você recebe acesso ao 1 Ano de Atividade Infantil Bíblica diretamente no seu E-MAIL
+              Após a confirmação, você recebe acesso ao arquivo diretamente no seu E-MAIL
             </p>
           </div>
 
           {/* SEÇÃO 3 - PROVA E GARANTIA */}
           <div className="mx-auto mt-14 max-w-[352px] bg-white border border-neutral-200 rounded-3xl p-5 shadow-sm text-center">
             <h2 className="text-[17px] font-black text-foreground leading-snug">
-              O Ministério Infantil Não Precisa Ser Um Fardo!
+              Você tem 7 Dias de Garantia
             </h2>
-            <p className="mt-2.5 text-[12.5px] leading-relaxed text-neutral-600">
-              A obra é séria, nosso suporte é real e o material já transformou a salinha de milhares de tias pelo Brasil. Saia dessa vida de improviso e volte a dormir em paz no sábado à noite.
-            </p>
 
             <div className="mt-4 bg-[color:var(--soft-mint)]/50 border border-[color:var(--brand-green)]/20 rounded-2xl p-4 text-left">
               <h3 className="text-xs font-black text-[color:var(--brand-green-dark)] flex items-center gap-1.5 uppercase tracking-wider">
-                <span>🛡️</span> Garantia Incondicional de 7 Dias:
+                <span>🛡️</span> Risco Zero:
               </h3>
               <p className="mt-1.5 text-[11.5px] text-neutral-700 leading-relaxed">
-                Acesse agora. Se você não amar o material ou achar que não serve para a sua igreja, devolvemos 100% do seu valor na hora. O risco é todo nosso!
+                Adquira hoje e teste todo o material na sua salinha. Se por qualquer motivo você não gostar, devolvemos 100% do seu dinheiro. Sem burocracia.
               </p>
             </div>
           </div>
@@ -741,26 +622,16 @@ export default function App() {
             </div>
             <div className="space-y-4 text-[13.5px] text-neutral-700 leading-relaxed text-left">
               <p>
-                <strong className="font-extrabold text-foreground">Muito prazer, tia! Eu sou a Maria Ester.</strong><br/>
-                E assim como você, eu sei o que é estar na linha de frente do Ministério Infantil.
+                <strong className="font-extrabold text-foreground text-base">Olá, sou Maria Ester! 👋</strong>
               </p>
               <p>
-                Se você já passou a madrugada de sábado cortando EVA, caçando ideias impossíveis no Pinterest e gastando do próprio bolso para a salinha de domingo... saiba que eu te entendo perfeitamente. Eu vivi esse ciclo de exaustão na pele.
+                Trabalho há anos desenvolvendo materiais que facilitam a vida de quem deseja compartilhar a Palavra de Deus de forma criativa, delicada e acessível.
               </p>
               <p>
-                Por muito tempo, eu vi o cansaço roubar a alegria do nosso chamado. Vi professoras incríveis se sentindo apenas "babás" de luxo durante o culto, com medo das crianças não prestarem atenção e virarem a sala de cabeça para baixo.
+                Criei o <strong>Kit Completo de Mini-Bíblias</strong> com muito carinho porque sei como é difícil encontrar opções de lembrancinhas que sejam, ao mesmo tempo, lindas, fáceis de montar e econômicas na hora de imprimir.
               </p>
               <p>
-                <strong className="font-extrabold text-[#10b981]">Foi exatamente para dar um basta nisso que eu decidi agir.</strong>
-              </p>
-              <p>
-                Eu reuni tudo o que realmente funciona e estruturei um método prático e 100% bíblico. O meu objetivo ao liberar este acervo com 1 ano inteiro de atividades prontas para imprimir não é apenas te entregar arquivos no computador.
-              </p>
-              <p>
-                A minha missão é te devolver a paz no fim de semana e a segurança de que você está ensinando a Palavra de Deus com excelência.
-              </p>
-              <p className="p-3 bg-[color:var(--soft-mint)]/30 border border-emerald-100 rounded-xl font-medium text-foreground">
-                Você tem um chamado lindo e não precisa mais improvisar. A sua salinha tem jeito, e eu estou aqui para te ajudar a dominá-la!
+                Meu objetivo é entregar para você um material de altíssima qualidade para que você possa abençoar outras pessoas e transmitir mensagens de fé e esperança, gastando pouco e tendo muito resultado!
               </p>
             </div>
           </div>
@@ -804,24 +675,33 @@ export default function App() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 w-full bg-gradient-to-r from-purple-600 via-pink-500 to-orange-500 hover:opacity-90 text-white font-extrabold py-3 px-4 rounded-xl text-xs uppercase tracking-wider transition-opacity shadow"
               >
-                <span>📸 Enviar Mensagem no Instagram</span>
+                <span className="text-lg">📸</span>
+                <span>Enviar Mensagem no Instagram</span>
               </a>
             </div>
           </div>
 
-          {/* Real Instagram Anchor & Watermark */}
-          <div className="pt-8 mt-12 border-t border-neutral-100 flex flex-col items-center justify-center gap-3">
+          {/* Real TikTok Anchor & Watermark */}
+          <div className="pt-8 mt-12 border-t border-neutral-200 flex flex-col items-center justify-center gap-4 px-4 pb-6">
             <a
-              href="https://www.instagram.com/maria_ester052/"
+              href="https://www.tiktok.com/@maria._ester52?is_from_webapp=1&sender_device=pc"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-xs font-black text-[#111827] hover:text-[#10b981] transition-colors"
+              className="inline-flex items-center gap-2 text-[15px] font-black text-[#111827] hover:text-[#10b981] transition-colors"
             >
-              <span className="text-rose-500 text-lg">📸</span>
-              <span>@maria_ester052</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1.04-.1z"/></svg>
+              <span>@maria._ester52</span>
             </a>
-            <p className="text-[10px] text-neutral-400">
-              © {new Date().getFullYear()} 1 Ano de Atividade Infantil Bíblica. Todos os Direitos Reservados.
+
+            <div className="flex flex-wrap justify-center gap-x-4 gap-y-2 text-[11px] text-neutral-500 font-medium">
+              <a href="#" className="hover:text-neutral-800 transition-colors">Termos de Uso</a>
+              <a href="#" className="hover:text-neutral-800 transition-colors">Políticas de Privacidade</a>
+              <a href="mailto:contato@exemplo.com" className="hover:text-neutral-800 transition-colors">Contato / Suporte</a>
+            </div>
+
+            <p className="text-[10px] text-neutral-400 text-center max-w-[320px] leading-relaxed">
+              © {new Date().getFullYear()} Mini-Bíblias. Todos os Direitos Reservados.<br/><br/>
+              Este site não é afiliado ao TikTok ou ByteDance, Facebook, Instagram ou Meta Platforms Inc.
             </p>
           </div>
 

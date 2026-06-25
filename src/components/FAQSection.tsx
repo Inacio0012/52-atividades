@@ -16,43 +16,23 @@ interface FAQItem {
 const FAQ_ITEMS: FAQItem[] = [
   {
     id: "faq-1",
-    question: "Como vou receber o material?",
-    answer: "O plano é 100% digital. Assim que sua compra é confirmada, você recebe um link exclusivo diretamente no seu e-mail para baixar todos os arquivos imediatamente."
+    question: "Como vou receber?",
+    answer: "Você receberá o link de acesso aos arquivos em PDF diretamente no e-mail cadastrado no momento da compra."
   },
   {
     id: "faq-2",
-    question: "O material é físico ou digital?",
-    answer: "O material é 100% digital (em formato PDF de alta resolução). Isso significa que você não paga frete, não precisa esperar pelos Correios e pode imprimir de forma prática sempre que precisar."
+    question: "É um produto físico?",
+    answer: "Não. É um arquivo 100% digital. Você não pagará frete, receberá o arquivo na hora e poderá imprimir quantas vezes quiser."
   },
   {
     id: "faq-3",
-    question: "Preciso de impressora?",
-    answer: "Você pode estudar e guiar os cultos lendo os roteiros de histórias direto do seu celular ou tablet. Somente as atividades de colorir e dinâmicas manuais precisam de impressão simples."
+    question: "Preciso de uma impressora especial?",
+    answer: "Não! Você pode imprimir na sua impressora de casa ou em qualquer papelaria, usando folha A4 comum ou um papel um pouquinho mais grosso se preferir."
   },
   {
     id: "faq-4",
-    question: "Posso imprimir mais de uma vez?",
-    answer: "Sim! Os arquivos em PDF são seus de forma perpétua. Você pode salvar, organizar e imprimir quantas cópias desejar para todas as turmas e crianças da sua comunidade."
-  },
-  {
-    id: "faq-5",
-    question: "Serve para qual turma?",
-    answer: "Os cultos, materiais de apoio e as roteirizações são ideais para crianças de 3 a 11 anos, possuindo adaptações simples que encantam todas as faixas etárias."
-  },
-  {
-    id: "faq-6",
-    question: "O material já vem pronto?",
-    answer: "Sim, totalmente pronto! Cada tema possui roteiro detalhado da contação rápida de história, quebra-gelo para abrir o culto, dinâmicas interativas e folha de atividade para fixação."
-  },
-  {
-    id: "faq-7",
-    question: "Quais formas de pagamento são aceitas?",
-    answer: "Aceitamos PIX e Cartão de Crédito. O pagamento via PIX é aprovado instantaneamente pelo sistema e envia seu material no mesmo minuto para o seu e-mail."
-  },
-  {
-    id: "faq-8",
-    question: "Tem garantia?",
-    answer: "Sim! Você conta com 7 dias de garantia incondicional. Se entender que o material não atendeu suas expectativas, basta nos enviar um e-mail para receber todo o seu dinheiro de volta."
+    question: "E se eu tiver dificuldades?",
+    answer: "O corte e montagem são muito intuitivos, mas caso tenha dúvidas, temos um suporte pronto para te ajudar."
   }
 ];
 
