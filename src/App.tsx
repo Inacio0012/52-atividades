@@ -17,7 +17,6 @@ import {
   Mail
 } from "lucide-react";
 import FAQSection from "./components/FAQSection";
-import CheckoutModal from "./components/CheckoutModal";
 
 // Fake Purchase Notification System
 const NAMES = ["Ana Paula", "Carla", "Bruna M.", "Juliana", "Vanessa", "Fernanda", "Camila T.", "Amanda", "Letícia", "Patrícia", "Mariana", "Silvia"];
@@ -106,12 +105,6 @@ export default function App() {
     };
   }, []);
 
-  const [selectedPlan, setSelectedPlan] = useState<{
-    id: string;
-    title: string;
-    price: number;
-  } | null>(null);
-
   // Configured with persistent local video embed simulation space
   const [embedCode, setEmbedCode] = useState<string>(() => {
     return localStorage.getItem("vsl_embed_code") || `<iframe src="https://imgur.com/a/8IkQnBp/embed?pub=true" style="border: 0; width: 100%; height: 100%; position: absolute; top:0; left:0;" allowfullscreen></iframe>`;
@@ -137,10 +130,6 @@ export default function App() {
     if (el) {
       el.scrollIntoView({ behavior: "smooth" });
     }
-  };
-
-  const handleOpenCheckout = (id: string, title: string, price: number) => {
-    setSelectedPlan({ id, title, price });
   };
 
   const today = new Date();
@@ -563,12 +552,12 @@ export default function App() {
                 </div>
 
                 {/* Botão */}
-                <button
-                  onClick={() => handleOpenCheckout("kit-completo", "Kit Completo: Mini-Bíblias", 27.90)}
-                  className="animate-cta-breathe w-full bg-[#10B981] hover:bg-[#059669] text-white font-black py-4 rounded-xl shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] transition-transform active:scale-[0.98] uppercase tracking-wider text-[15px] cursor-pointer"
+                <a
+                  href="https://pay.wiapy.com/dIvcRZutgHj"
+                  className="animate-cta-breathe flex items-center justify-center w-full bg-[#10B981] hover:bg-[#059669] text-white font-black py-4 rounded-xl shadow-[0_4px_14px_0_rgba(16,185,129,0.39)] transition-transform active:scale-[0.98] uppercase tracking-wider text-[15px] cursor-pointer text-center"
                 >
                   QUERO O KIT COMPLETO AGORA
-                </button>
+                </a>
                 
                 {/* Rodapé Segurança */}
                 <div className="mt-4 flex items-center justify-center text-[10.5px] text-neutral-500 font-medium text-center leading-tight">
@@ -707,15 +696,6 @@ export default function App() {
 
         </div>
       </main>
-
-      {/* Real Checkout selection modal */}
-      {selectedPlan && (
-        <CheckoutModal
-          selectedPlan={selectedPlan}
-          onClose={() => setSelectedPlan(null)}
-        />
-      )}
-
 
     </div>
   );
